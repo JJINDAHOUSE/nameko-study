@@ -87,3 +87,12 @@ class GatewayService(object):
                 GetOrderSchema().dumps(order).data,
                 mimetype='application/json'
             )
+
+        def _get_order(self, order_id):
+            # Retrieve order data from the orders service.
+            # Note - this may raise a remote exception that has been mapped to
+            # raise `OrderNotFound`
+            order = self.orders_rpc.get_order(order_id)
+
+            # Retrieve all products from the products service
+            product_map = {prod['id']: prod for prod in self.products_rpc.list()}
